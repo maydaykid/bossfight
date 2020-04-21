@@ -1,0 +1,168 @@
+using System;
+
+namespace bossfight2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Random rand = new Random();
+            string userInput;
+
+            int trollkingHealth = 15000;
+            int trollsNumber = 0;
+            int whatWillTrollkingDo;
+
+            int hunterHealth = 1500;
+            int hunterPower = 0;
+            int healthPotionAmount = 20;
+            int healthRestorePerPotion = 250;
+
+            Console.WriteLine("В полдень охотник вошёл в пещеру. Он был уверен в себе: " + hunterHealth + " единиц здоровья, \nкрепкая броня и остро наточенное копьё должны были стать весомым аргументом \nпротив Короля Троллей.");
+            Console.WriteLine("Даже если что-то пойдёт не так - есть " + healthPotionAmount + " зелий здоровья, каждое из которых \nвосстановит " + healthRestorePerPotion + " единиц здоровья.");
+            Console.WriteLine("И, кроме того, закалённый дух постепенно наполнял тело силой. Сейчас энергии: " + hunterPower);
+            Console.WriteLine("\nЧудовище спало в центре просторной залы. Тролли - ночные создания, поэтому герой приближался размеренным шагом, не боясь потревожить врага лязгом доспехов.");
+            Console.WriteLine("Здоровья в этой землистого цвета туше было на " + trollkingHealth + " единиц здоровья, однако она была ничем не защищена. Медицина же явно была вне понимания троллей, так что \nнезачем ожидать от боя слишком многого.");
+            Console.WriteLine("Если же монстр не проснётся, боя и вовсе не будет.");
+            Console.WriteLine("\nВсё портит внезапно отколовшийся от свода пещеры кусок сталактита. Камень будит Короля, расколовшись прямо о его лоб, но, кажется, не причинив никакого вреда. \nЗараза.");
+            Console.WriteLine("Есть время спланировать свои действия, пока грузный противник поднимается \nна ноги. Что сделает охотник?");
+            Console.WriteLine("\n1) Удар копьём. Наносит от 100 до 300 единиц урона.");
+            Console.WriteLine("2) Заклинание 'Кипящая кровь'. Требует 50 единиц энергии. Наносит от 500 до 750 единиц урона. Действует на всех ближайший врагов. Гарантированно убило бы \nобычного тролля.");
+            Console.WriteLine("3) 'Контракт', призыв яростного духа, который может нанести от 1000 до 2500 \nединиц урона. Требует 100 единиц энергии.");
+            Console.WriteLine("4) Выпить зелье здоровья. Восстанавливает " + healthRestorePerPotion + " единиц здоровья.");
+
+            while(hunterHealth > 0 && trollkingHealth > 0)
+            {
+                hunterPower += 10;
+                Console.WriteLine("\nСейчас энергии:" + hunterPower);
+                int hunterBlock = rand.Next(75, 96);
+                int hunterChanceOfDodge = rand.Next(0, 11);
+                bool haveTrollkingHitHunter = hunterChanceOfDodge <= 7;
+
+                userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case "1":
+                        {
+                            int spearStrikeDamage = rand.Next(100, 301);
+                            trollkingHealth -= spearStrikeDamage;
+                            Console.WriteLine("\nОхотник наносит удар копьём на " + spearStrikeDamage + ". \nУ Короля троллей теперь " + trollkingHealth + " единиц здоровья.");
+                        }
+                        break;
+                    case "2":
+                        {
+                            if(hunterPower >= 50)
+                            {
+                                if(trollsNumber > 0)
+                                {
+                                    hunterPower -= 50;
+                                    trollsNumber -= trollsNumber;
+                                    int bloodBoilingDamage = rand.Next(500, 751);
+                                    trollkingHealth -= bloodBoilingDamage;
+                                    Console.WriteLine("\nКровь тварей буквально вскипает в жилах! Все тролли лопаются, словно мыльные пузыри. \nКоролю троллей нанесено " + bloodBoilingDamage + " единиц урона. Теперь у него " + trollkingHealth + " единиц здоровья.");
+                                }
+                                else if(trollsNumber <= 0)
+                                {
+                                    hunterPower -= 50;
+                                    int bloodBoilingDamage = rand.Next(500, 751);
+                                    trollkingHealth -= bloodBoilingDamage;
+                                    Console.WriteLine("\nКровь твари буквально вскипает в жилах!\nКоролю троллей нанесено " + bloodBoilingDamage + " единиц урона. Теперь у него " + trollkingHealth + " единиц здоровья.");
+                                }
+                            }
+                            else if(hunterPower < 50)
+                            {
+                                Console.WriteLine("\nО нет! Из-за недостатка энергии не выходит сотворить заклинание, а момент для удара упущен!");
+                            }
+                        }
+                        break;
+                    case "3":
+                        {
+                            if(hunterPower >= 100)
+                            {
+                                hunterPower -= 100;
+                                int spiritPactDamage = rand.Next(1000, 2501);
+                                trollkingHealth -= spiritPactDamage;
+                                Console.WriteLine("\nДух отозвался на ваш призыв и вихрем прошёл по полю боя, раня чудовище. \nОн нанёс Королю троллей " + spiritPactDamage + " единиц урона. Теперь у Короля " + trollkingHealth + " единиц здоровья.");
+                            }
+                            else if (hunterPower < 100)
+                            {
+                                Console.WriteLine("\nО нет! Из-за недостатка энергии не выходит сотворить заклинание, а момент для удара упущен!");
+                            }
+                        }
+                        break;
+                    case "4":
+                        {
+                            if(hunterHealth < 1500 && healthPotionAmount > 0)
+                            {
+                                hunterHealth += healthRestorePerPotion;
+                                Console.WriteLine("\nОхотник пьёт зелье здоровья. Синяки мгновенно сходят, раны затягиваются. У охотника теперь " + hunterHealth + " единиц здоровья.");
+                            }
+                            else if(hunterHealth >= 1500 && healthPotionAmount > 0)
+                            {
+                                hunterHealth += healthRestorePerPotion;
+                                Console.WriteLine("\nОхотник пьёт зелье здоровья, хотя и не ранен. Нутро наполняется теплом, а сердце - решимостью. У охотника теперь " + hunterHealth + " единиц здоровья.");
+                            }
+                            else if(healthPotionAmount == 0)
+                            {
+                                Console.WriteLine("\nО нет! Зелья здоровья кончились, а момент для удара упущен!");
+                            }
+                        }
+                        break;
+                }
+
+                if(trollsNumber > 0)
+                {
+                    hunterHealth -= trollsNumber * 15 - trollsNumber * 15 / 100 * hunterBlock;
+                    Console.WriteLine("\nСкачущие рядом тролли ищут зазоры в броне и наносят удары заострёнными камнями. У охотника теперь " + hunterHealth + "единиц здоровья.");
+                }
+
+                whatWillTrollkingDo = rand.Next(1, 4);
+                switch(whatWillTrollkingDo)
+                {
+                    case 1:
+                        {
+                            Console.WriteLine("\nКороль троллей заносит дубину для удара!");
+                            hunterHealth -= (500 - (500 / 100 * hunterBlock)) * Convert.ToInt32(haveTrollkingHitHunter);
+                            if (haveTrollkingHitHunter == true)
+                            {
+                                Console.WriteLine("К несчастью, массивная дубина задела охотника. Теперь у него " + hunterHealth + " единиц здоровья.");
+                            }
+                            else if(haveTrollkingHitHunter == false)
+                            {
+                                Console.WriteLine("Охотник увернулся от удара! У него всё ещё " + hunterHealth + "единиц здоровья.");
+                            }
+                        }
+                        break;
+                    case 2:
+                        {
+                            trollsNumber += 3;
+                            Console.WriteLine("\nКороль призвал 3 троллей себе на подмогу! Теперь в пещере " + trollsNumber + " мелких назойливых бестий. Хорошо, что это не оставляет ему времени для другого действия.");
+                        }
+                        break;
+                    case 3:
+                        {
+                            Console.WriteLine("\nКороль троллей оглушительно ревёт и бьёт дубиной по земле, вызывая обвал!");
+                            int stonefallDamage = rand.Next(250, 1001);
+                            hunterHealth -= stonefallDamage - (stonefallDamage / 100 * hunterBlock);
+                            Console.WriteLine("Полностью избежать летящих сверху камней не удалось. У охотника теперь " + hunterHealth + "единиц здоровья.");
+                        }
+                        break;
+                }
+            }
+
+            if(hunterHealth <= 0 && trollkingHealth <=0)
+            {
+                Console.WriteLine("\nБуквально испуская последний вздох чудовище смогло нанести вымотанному боем охотнику фатальный удар. Пещера погрузилась в зловещую тишину.");
+            }
+            else if(hunterHealth <= 0)
+            {
+                Console.WriteLine("\nОхотник пал, не сумев одолеть монстра. В течение следующего месяца орда троллей будет терроризировать жителей ближайших земель, мстя за пролитую кровь.");
+            }
+            else if(trollkingHealth <= 0)
+            {
+                Console.WriteLine("\nОхотник уничтожил всех троллей в пещерах и получил солидную награду за голову их Короля в ближайшем городе.");
+            }
+        }
+    }
+}
